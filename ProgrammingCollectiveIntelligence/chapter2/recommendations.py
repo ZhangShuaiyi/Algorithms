@@ -43,19 +43,6 @@ def sim_euclidean_distance(prefs, person1, person2):
     return 1 / (1 + sqrt(sum_of_squares))
 
 
-def sim_distance2(prefs, person1, person2):
-    si = {}
-    for item in prefs[person1]:
-        if item in prefs[person2]:
-            si[item] = 1
-    if len(si) == 0:
-        return 0
-    sum_of_squares = sum([pow(prefs[person1][item] - prefs[person2][item],
-                              2) for item in prefs[person1] if item in
-                          prefs[person2]])
-    return 1 / (1 + sqrt(sum_of_squares))
-
-
 # 皮尔森相关系数
 # 结果的取值区间为[-1，1]，-1表示完全的负相关(这个变量下降，那个就会上升)，+1表示完全的正相关，0表示没有线性相关
 def sim_pearson_correlation_score(prefs, p1, p2):
@@ -100,6 +87,41 @@ def topMatches(prefs, person, n=5, similarity=sim_pearson_correlation_score):
     return scores[:n]
 
 
+def getRecommendations(prefs, person,
+                       similarity=sim_pearson_correlation_score):
+    """
+    根据用户相似度计算和影片评分，预测用户还未看过的电影的评分，进行影片推荐
+    """
+    totals = {}
+    simSums = {}
+    for other in prefs:
+        # 不比较自己
+        if other == person:
+            continue
+        # 计算相关性
+        sim = similarity(prefs, person, other)
+
+        # 忽略相关性小于等于0的用户
+        if sim <= 0:
+            continue
+
+        for item in prefs[other]:
+            # 只对自己还未看过的影片进行评价
+            if item not in prefs[person] or prefs[person][item] == 0:
+                # 评分*相似度之和
+                totals.setdefault(item, 0)
+                totals[item] += prefs[other][item] * sim
+                # 相似度之和
+                simSums.setdefault(item, 0)
+                simSums[item] += sim
+
+    # 建立一个归一化列表
+    rankings = [(total / simSums[item], item)
+                for item, total in totals.items()]
+    rankings.sort(reverse=True)
+    return rankings
+
+
 if __name__ == '__main__':
     ret = sim_euclidean_distance(critics, 'Lisa Rose', 'Gene Seymour')
     print("Euclidean Distance: %.20f" % (ret))
@@ -107,3 +129,9 @@ if __name__ == '__main__':
     print("Pearson Correlation Score: %.20f" % (ret))
     print("match Toby top 3:")
     print(topMatches(critics, 'Toby', n=3))
+    rankings = getRecommendations(critics, 'Toby')
+    print("getRecommendations for Toby:")
+    print(rankings)
+    rankings = getRecommendations(critics, 'Toby', sim_euclidean_distance)
+    print("getRecommendations by sim_euclidean_distance for Toby:")
+    print(rankings)
