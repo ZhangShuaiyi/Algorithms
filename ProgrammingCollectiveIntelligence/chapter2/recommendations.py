@@ -61,7 +61,7 @@ def sim_distance2(prefs, person1, person2):
 def sim_pearson_correlation_score(prefs, p1, p2):
     si = [item for item in prefs[p1] if item in prefs[p2]]
     n = len(si)
-    
+
     # 如果没有共同之处返回0
     if n == 0:
         return 0
@@ -87,8 +87,23 @@ def sim_pearson_correlation_score(prefs, p1, p2):
     return r
 
 
+def topMatches(prefs, person, n=5, similarity=sim_pearson_correlation_score):
+    """
+    从反应偏好的字典中返回最为匹配者
+    返回结果的个数和相似度函数为可选参数
+    """
+    scores = [(similarity(prefs, person, other), other)
+              for other in prefs if other != person]
+
+    # 对列表进行排序，评价高者排在最前面
+    scores.sort(reverse=True)
+    return scores[:n]
+
+
 if __name__ == '__main__':
     ret = sim_euclidean_distance(critics, 'Lisa Rose', 'Gene Seymour')
     print("Euclidean Distance: %.20f" % (ret))
     ret = sim_pearson_correlation_score(critics, 'Lisa Rose', 'Gene Seymour')
     print("Pearson Correlation Score: %.20f" % (ret))
+    print("match Toby top 3:")
+    print(topMatches(critics, 'Toby', n=3))
