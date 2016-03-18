@@ -122,6 +122,17 @@ def getRecommendations(prefs, person,
     return rankings
 
 
+def transformPrefs(prefs):
+    result = {}
+    for person in prefs:
+        for item in prefs[person]:
+            result.setdefault(item, {})
+
+            # 将人员和物品对调
+            result[item][person] = prefs[person][item]
+    return result
+
+
 if __name__ == '__main__':
     ret = sim_euclidean_distance(critics, 'Lisa Rose', 'Gene Seymour')
     print("Euclidean Distance: %.20f" % (ret))
@@ -135,3 +146,14 @@ if __name__ == '__main__':
     rankings = getRecommendations(critics, 'Toby', sim_euclidean_distance)
     print("getRecommendations by sim_euclidean_distance for Toby:")
     print(rankings)
+
+    movies = transformPrefs(critics)
+    movie = 'Superman Returns'
+    ret = topMatches(movies, movie)
+    print("match " + movie + " top:")
+    print(ret)
+
+    movie = 'Just My Luck'
+    ret = getRecommendations(movies, movie)
+    print('getRecommendations for ' + movie + ':')
+    print(ret)
