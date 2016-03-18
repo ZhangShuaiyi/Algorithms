@@ -40,6 +40,7 @@ def sim_euclidean_distance(prefs, person1, person2):
     # 计算所有差值的平方和
     sum_of_squares = sum(pow(prefs[person1][item] - prefs[person2][item],
                              2) for item in si)
+    # return 1 / (1 + sum_of_squares)
     return 1 / (1 + sqrt(sum_of_squares))
 
 
@@ -133,6 +134,50 @@ def transformPrefs(prefs):
     return result
 
 
+def calculateSimilarItems(prefs, n=10):
+    # 建立字典，列出物品最为接近的其它物品及相似度
+    result = {}
+
+    itemPrefs = transformPrefs(prefs)
+    for item in itemPrefs:
+        # 列出最接近的n个物品
+        scores = topMatches(
+            itemPrefs, item, n=n, similarity=sim_euclidean_distance)
+        result[item] = scores
+    return result
+
+
+def getRecommendedItems(prefs, itemMatch, user):
+    # 用户已经评过分的商品
+    userRatings = prefs[user]
+    scores = {}
+    totalSim = {}
+
+    # 遍历用户已评分商品
+    for (item, rating) in userRatings.items():
+
+        # 遍历当前商品向近的商品
+        for (similarity, item2) in itemMatch[item]:
+            # 如果用户已对商品做过评价，则忽略
+            if item2 in userRatings:
+                continue
+
+            # 评分与相似度的加权和
+            scores.setdefault(item2, 0)
+            scores[item2] += rating * similarity
+
+            # 相似度之和
+            totalSim.setdefault(item2, 0)
+            totalSim[item2] += similarity
+
+    # 将加权和除以相似度之和得到平均值
+    rankings = [(score / totalSim[item], item)
+                for item, score in scores.items()]
+
+    rankings.sort(reverse=True)
+    return rankings
+
+
 if __name__ == '__main__':
     ret = sim_euclidean_distance(critics, 'Lisa Rose', 'Gene Seymour')
     print("Euclidean Distance: %.20f" % (ret))
@@ -156,4 +201,11 @@ if __name__ == '__main__':
     movie = 'Just My Luck'
     ret = getRecommendations(movies, movie)
     print('getRecommendations for ' + movie + ':')
+    print(ret)
+
+    itemsim = calculateSimilarItems(critics)
+    # print(itemsim)
+    user = 'Toby'
+    ret = getRecommendedItems(critics, itemsim, user)
+    print('getRecommendedItems for ' + user + ':')
     print(ret)
