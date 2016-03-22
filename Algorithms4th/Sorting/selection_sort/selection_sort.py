@@ -11,6 +11,10 @@ class SelectionSort():
         self.arg = arg
 
     @classmethod
+    def less(cls, a, i, j):
+        return a[i] < a[j]
+
+    @classmethod
     def exch(cls, a, i, j):
         tmp = a[i]
         a[i] = a[j]
@@ -23,7 +27,7 @@ class SelectionSort():
         for i in range(n):
             min = i
             for j in range(i, n):
-                if data[j] < data[min]:
+                if cls.less(data, j, min):
                     min = j
             cls.exch(data, i, min)
 
