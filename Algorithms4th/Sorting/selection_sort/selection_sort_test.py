@@ -1,6 +1,6 @@
 import unittest
 import os
-import selection_sort
+from selection_sort import SelectionSort
 
 
 class TestSelectionSort(unittest.TestCase):
@@ -27,7 +27,7 @@ class TestSelectionSort(unittest.TestCase):
                 with open(os.path.join(self.data_path, filename), 'r') as f:
                     lines = f.readlines()
                     [a.extend(line.split()) for line in lines]
-                selection_sort.selection_sort(a)
+                SelectionSort.selection_sort(a)
                 self.assertListEqual(a, ret)
 
 
