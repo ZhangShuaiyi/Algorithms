@@ -32,7 +32,7 @@ def drawnode(draw, clust, x, y, scaling, labels):
         l1 = clust.distance * scaling
         # 聚类到其字节点的垂直线
         draw.line((x, top + h1 / 2, x, bottom - h2 / 2), fill=(255, 0, 0))
-        
+
         # 连接左侧节点的水平线
         draw.line((x, top + h1 / 2, x + l1, top + h1 / 2), fill=(255, 0, 0))
 
