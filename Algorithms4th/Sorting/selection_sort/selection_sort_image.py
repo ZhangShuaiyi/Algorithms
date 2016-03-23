@@ -26,7 +26,7 @@ class SelectionSortImage(SelectionSort):
                      xs=cls.xs, lw=int(cls.xs) - 1, ys=cls.ys,
                      i=i, j=j, color=(0, 255, 255))
         cls.step += 1
-        return a[i] < a[j]
+        return super(SelectionSortImage, cls).less(a, i, j)
 
     @classmethod
     def exch(cls, a, i, j):
@@ -59,7 +59,7 @@ class SelectionSortImage(SelectionSort):
         draw = ImageDraw.Draw(img)
         x = 10
         if text is not None:
-            draw.text((x, 0), text, (0, 255, 0))
+            draw.text((x, 0), text, (255, 0, 0))
         for n, d in enumerate(buf):
             s = ''
             if isinstance(d, str):
@@ -71,8 +71,9 @@ class SelectionSortImage(SelectionSort):
             if n == i or n == j:
                 draw.line((x, h, x, h - d * ys), fill=color, width=lw)
             else:
-                draw.line((x, h, x, h - d * ys), fill=(255, 0, 0), width=lw)
-            draw.text((x, h - d * ys - ys), s, (0, 0, 0))
+                draw.line(
+                    (x, h, x, h - d * ys), fill=(128, 128, 128), width=lw)
+            draw.text((x, h - d * ys - 12), s, (0, 0, 0))
             x += xs
         # 显示图片
         # img.show()

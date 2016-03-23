@@ -6,27 +6,25 @@
 class SelectionSort():
     """docstring for SelectionSort"""
 
-    def __init__(self, arg):
-        super(SelectionSort, self).__init__()
-        self.arg = arg
-
     @classmethod
     def less(cls, a, i, j):
+        # 比较
         return a[i] < a[j]
 
     @classmethod
     def exch(cls, a, i, j):
-        tmp = a[i]
-        a[i] = a[j]
-        a[j] = tmp
+        # 交换list
+        a[i], a[j] = a[j], a[i]
 
     @classmethod
     def selection_sort(cls, data):
         print("Using selection_sort!")
         n = len(data)
+        # 外循环，给第i个位置交换数据
         for i in range(n):
             min = i
-            for j in range(i, n):
+            # 内循环，查找最小值
+            for j in range(i+1, n):
                 if cls.less(data, j, min):
                     min = j
             cls.exch(data, i, min)
