@@ -3,10 +3,12 @@ class TopDownMergeSort():
 
     @classmethod
     def merge(cls, a, lo, mid, hi):
+        # 将a[lo...hi]复制到aux[lo...hi]
         cls.aux[lo:hi + 1] = a[lo:hi + 1]
         i = lo
         j = mid + 1
         k = lo
+        # 归并会a[lo...hi]
         while i <= mid and j <= hi:
             if cls.aux[i] < cls.aux[j]:
                 a[k] = cls.aux[i]
@@ -27,8 +29,11 @@ class TopDownMergeSort():
         if hi <= lo:
             return
         mid = lo + (hi - lo) // 2
+        # 对左侧进行排序
         cls.merge_sort(a, lo, mid)
+        # 对右侧进行排序
         cls.merge_sort(a, mid + 1, hi)
+        # 归并结果
         cls.merge(a, lo, mid, hi)
 
     @classmethod

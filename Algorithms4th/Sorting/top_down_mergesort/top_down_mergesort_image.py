@@ -46,13 +46,13 @@ class SortImage():
 
             if n == i:
                 draw.line((x, by, x, by - d * self.ys),
-                          fill=(0, 255, 255), width=self.lw)
+                          fill=(255, 0, 0), width=self.lw)
             elif n >= lo and n <= mid:
                 draw.line((x, by, x, by - d * self.ys),
-                          fill=(0, 0, 255), width=self.lw)
+                          fill=(0, 255, 0), width=self.lw)
             elif n > mid and n <= hi:
                 draw.line((x, by, x, by - d * self.ys),
-                          fill=(0, 255, 0), width=self.lw)
+                          fill=(0, 0, 255), width=self.lw)
             else:
                 draw.line((x, by, x, by - d * self.ys),
                           fill=(128, 128, 128), width=self.lw)
@@ -72,10 +72,10 @@ class SortImage():
 
             if n == k:
                 draw.line((x, by, x, by - d * self.ys),
-                          fill=(0, 255, 255), width=self.lw)
+                          fill=(255, 0, 0), width=self.lw)
             elif n >= lo and n <= hi:
                 draw.line((x, by, x, by - d * self.ys),
-                          fill=(255, 0, 255), width=self.lw)
+                          fill=(0, 128, 128), width=self.lw)
             else:
                 draw.line((x, by, x, by - d * self.ys),
                           fill=(128, 128, 128), width=self.lw)
@@ -94,31 +94,37 @@ class TopDownMergeSortImage(TopDownMergeSort):
         cls.sort_image.draw_lists(cls.aux, a, lo, mid, hi)
         i = lo
         j = mid + 1
-        k = lo
-        while i <= mid and j <= hi:
-            if cls.aux[i] < cls.aux[j]:
-                a[k] = cls.aux[i]
-                cls.sort_image.draw_lists(
-                    cls.aux, a, lo, mid, hi, k=k, i=i)
-                k += 1
-                i += 1
-            else:
+
+        for k in range(lo, hi + 1):
+            if i > mid:
                 a[k] = cls.aux[j]
                 cls.sort_image.draw_lists(
                     cls.aux, a, lo, mid, hi, k=k, i=j)
-                k += 1
                 j += 1
-        n = mid + 1 - i
-        a[k:k + n] = cls.aux[i:mid + 1]
-        k += n
-        n = hi + 1 - j
-        a[k:k + n] = cls.aux[j:hi + 1]
-        cls.sort_image.draw_lists(cls.aux, a, lo, mid, hi)
+            elif j > hi:
+                a[k] = cls.aux[i]
+                cls.sort_image.draw_lists(
+                    cls.aux, a, lo, mid, hi, k=k, i=i)
+                i += 1
+            elif cls.aux[j] < cls.aux[i]:
+                a[k] = cls.aux[j]
+                cls.sort_image.draw_lists(
+                    cls.aux, a, lo, mid, hi, k=k, i=j)
+                j += 1
+            else:
+                a[k] = cls.aux[i]
+                cls.sort_image.draw_lists(
+                    cls.aux, a, lo, mid, hi, k=k, i=i)
+                i += 1
 
     @classmethod
     def sort(cls, a):
         cls.sort_image = SortImage(a)
         super(TopDownMergeSortImage, cls).sort(a)
+        lo = 0
+        hi = len(a) - 1
+        mid = lo + (hi - lo) // 2
+        cls.sort_image.draw_lists(cls.aux, a, lo, mid, hi)
 
 
 if __name__ == '__main__':
