@@ -18,6 +18,10 @@ class TestSort():
               'sob', 'tag', 'tap', 'tar', 'tip', 'wad', 'was', 'wee',
               'yes', 'yet', 'zoo']}
         ]
+        self.datas2 = [
+            [5, 2, 3, 1, 2, 3, 1, 2, 2, 2, 4, 4, 5, 5, 2],
+            [1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 4, 4, 5, 5, 5]
+        ]
 
     def test_sort(self):
         for item in self.datas:
@@ -33,3 +37,5 @@ class TestSort():
                 else:
                     a.sort()
                 self.assertListEqual(a, ret)
+        self.cls.sort(self.datas2[0])
+        self.assertListEqual(self.datas2[0], self.datas2[1])

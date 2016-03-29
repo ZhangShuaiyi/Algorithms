@@ -15,17 +15,19 @@ class QuickSortImage(QuickSort):
     @classmethod
     def partition(cls, a, lo, hi):
         # 左右扫描索引
-        i = lo + 1
-        j = hi
+        i = lo
+        j = hi + 1
         # 切分元素
         v = a[lo]
         while True:
             # 扫描左右，检查扫描是否结束并交换元素
+            i += 1
             while a[i] < v:
                 cls.draw_list(a, lo, hi, i, j)
                 if i == hi:
                     break
                 i += 1
+            j -= 1
             while v < a[j]:
                 cls.draw_list(a, lo, hi, i, j)
                 if j == lo:
@@ -113,7 +115,8 @@ class QuickSortImage(QuickSort):
 if __name__ == '__main__':
     import sys
     if len(sys.argv) < 2:
-        a = list(range(11, 0, -1))
+        # a = list(range(11, 0, -1))
+        a = [5, 2, 3, 1, 2, 3, 1, 2, 2, 2, 4, 4, 5, 5, 2]
         QuickSortImage.sort(a)
         print(a)
     else:

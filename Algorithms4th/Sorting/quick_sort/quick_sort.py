@@ -8,16 +8,18 @@ class QuickSort(object):
     @classmethod
     def partition(cls, a, lo, hi):
         # 左右扫描索引
-        i = lo + 1
-        j = hi
+        i = lo
+        j = hi + 1
         # 切分元素
         v = a[lo]
         while True:
             # 扫描左右，检查扫描是否结束并交换元素
+            i += 1
             while a[i] < v:
                 if i == hi:
                     break
                 i += 1
+            j -= 1
             while v < a[j]:
                 if j == lo:
                     break

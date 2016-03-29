@@ -107,7 +107,8 @@ class QuickSortImage(Quick3way):
 if __name__ == '__main__':
     import sys
     if len(sys.argv) < 2:
-        a = list(range(11, 0, -1))
+        # a = list(range(11, 0, -1))
+        a = [5, 2, 3, 1, 2, 3, 1, 2, 2, 2, 4, 4, 5, 5, 2]
         QuickSortImage.sort(a)
         print(a)
     else:
