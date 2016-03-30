@@ -16,9 +16,10 @@ class HeapSortImage(object):
         while j <= n:
             if j < n and a[j] < a[j + 1]:
                 j += 1
+            cls.draw_list(a, n, ck=k, cw=j)
             if a[k] >= a[j]:
                 break
-            cls.draw_list(a, n, k, j)
+            cls.draw_list(a, n, i=k, j=j)
             a[k], a[j] = a[j], a[k]
             k = j
             j = 2 * k + 1
@@ -31,12 +32,13 @@ class HeapSortImage(object):
         for k in range((n - 1) // 2, -1, -1):
             cls.sink(a, k, n)
         while n > 0:
-            cls.draw_list(a, n, 0, n)
+            cls.draw_list(a, n, i=0, j=n)
             # a[0]最大，将a[0]交换到最后
             a[0], a[n] = a[n], a[0]
             n -= 1
             # 减小堆大小，将a[0]下浮到对应位置
             cls.sink(a, 0, n)
+        cls.draw_list(a)
 
     @classmethod
     def init_image(cls, a, w=400, h=400):
@@ -75,7 +77,7 @@ class HeapSortImage(object):
         cls.heap_xy = [0] * n
 
     @classmethod
-    def draw_heap(cls, draw, a, num, i=-1, j=-1):
+    def draw_heap(cls, draw, a, num, i=-1, j=-1, ck=-1, cw=-1):
         for n, v in enumerate(a):
             if n > num:
                 break
@@ -104,9 +106,13 @@ class HeapSortImage(object):
             x1, y1 = cls.heap_xy[i]
             x2, y2 = cls.heap_xy[j]
             draw.line((x1, y1 + 10, x2, y2), (255, 0, 0), width=2)
+        if ck != -1 and cw != -1:
+            x1, y1 = cls.heap_xy[ck]
+            x2, y2 = cls.heap_xy[cw]
+            draw.line((x1, y1 + 10, x2, y2), (0, 255, 255))
 
     @classmethod
-    def draw_list(cls, a, num, i=-1, j=-1):
+    def draw_list(cls, a, num=-1, i=-1, j=-1, ck=-1, cw=-1):
         # 新建一个白色背景图片
         img = Image.new('RGB', (cls.w, cls.h), (255, 255, 255))
         draw = ImageDraw.Draw(img)
@@ -118,7 +124,13 @@ class HeapSortImage(object):
             x2 = cls.xs * j + list_x
             y = cls.line_y + 10
             draw.line((x1, y, x2, y), fill=(255, 0, 0), width=2)
-        cls.draw_heap(draw, a, num, i, j)
+        if ck != -1 and cw != -1:
+            x1 = cls.xs * ck + list_x
+            x2 = cls.xs * cw + list_x
+            y = cls.line_y + 10
+            draw.line((x1, y, x2, y), fill=(0, 255, 255))
+
+        cls.draw_heap(draw, a, num, i, j, ck, cw)
         for n, v in enumerate(a):
             s = ''
             if isinstance(v, str):
@@ -141,6 +153,10 @@ class HeapSortImage(object):
                 y1 = cls.h - v * cls.ys - 12
                 y2 = cls.line_y + 10
                 draw.line((list_x, y1, list_x, y2), fill=(255, 0, 0), width=2)
+            if n == ck or n == cw:
+                y1 = cls.h - v * cls.ys - 12
+                y2 = cls.line_y + 10
+                draw.line((list_x, y1, list_x, y2), fill=(0, 255, 255))
             if n == num:
                 draw.line((list_x, cls.line_y + 20, cls.w, cls.line_y + 20),
                           fill=(0, 0, 255))
