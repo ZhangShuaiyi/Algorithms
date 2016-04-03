@@ -6,6 +6,7 @@ class UnionFindTest():
     cls = None
 
     def setUp(self):
+        print('Using ', self.cls)
         self.data_path = os.path.dirname(
             os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
         self.data_path = os.path.join(self.data_path, 'algs4-data')
