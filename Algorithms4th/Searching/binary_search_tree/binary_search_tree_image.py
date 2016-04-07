@@ -23,7 +23,7 @@ class BSTImage(BST):
         super(BSTImage, self).put(key, val)
         self.draw_tree(key)
 
-    def draw_tree(self, key):
+    def draw_tree(self, key=None):
         if self.root is None:
             return
         # 新建一个白色背景图片
@@ -82,3 +82,5 @@ if __name__ == '__main__':
                         bst.put(word, 1)
                     else:
                         bst.put(word, val + 1)
+            bst.delete('E')
+            bst.draw_tree()

@@ -50,3 +50,43 @@ class BST():
             node.val = val
         node.N = self.size(node.left) + self.size(node.right) + 1
         return node
+
+    def min(self):
+        return self.min_node(self.root).key
+
+    def min_node(self, node):
+        if node.left is None:
+            return node
+        return self.min_node(node.left)
+
+    def delete_min(self):
+        self.root = self.delete_min_node(self.root)
+
+    def delete_min_node(self, node):
+        if node.left is None:
+            return node.right
+        node.left = self.delete_min_node(node.left)
+        node.N = self.size(node.left) + self.size(node.right) + 1
+        return node
+
+    def delete(self, key):
+        self.root = self.delete_node(self.root, key)
+
+    def delete_node(self, node, key):
+        if node is None:
+            return None
+        if key < node.key:
+            node.left = self.delete_node(node.left, key)
+        elif key > node.key:
+            node.right = self.delete_node(node.right, key)
+        else:
+            if node.right is None:
+                return node.left
+            if node.left is None:
+                return node.right
+            t = node
+            node = self.min_node(t.right)
+            node.right = self.delete_min_node(t.right)
+            node.left = t.left
+        node.N = self.size(node.left) + self.size(node.right) + 1
+        return node
